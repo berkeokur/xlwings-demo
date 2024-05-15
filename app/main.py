@@ -1,9 +1,11 @@
 from typing import Annotated
-
 import xlwings as xw
 from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
+from mailjet import email_body
+from lang_detect import detect_language_polyglot
+import current_GPT as gpt
 
 app = FastAPI()
 
@@ -43,6 +45,51 @@ async def exception_handler(request, exception):
     return PlainTextResponse(
         str(exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
     )
+
+@app.post("/generate")
+async def generate(book: Book):
+    sheet = book.sheets[0]
+
+    # Start with the first row (row_num = 1)
+    row_num = 2
+
+    # Continue looping until there is no value in column A
+    while True:
+        cell_a = sheet.range(f"A{row_num}")  # Get the cell in column A
+
+        # Check if the cell in column A is empty
+        if cell_a.value:
+            # Move to the next row
+            row_num += 1
+        else:
+            row_num -= 1
+            break
+    
+    #Get row values
+    manager_name = sheet.range(f"B{row_num}").value
+    guest_name = sheet.range(f"C{row_num}").value
+    guest_email = sheet.range(f"D{row_num}").value
+    observations = sheet.range(f"E{row_num}").value
+
+    # Detect language
+    detected_language, confidence = detect_language_polyglot(observations)
+    print(f"Detected language: {detected_language} with confidence: {confidence:.2f}")
+
+    #Generate review and title
+    generated_review = gpt.generate_review(observations, detected_language)
+    print("Review: ", generated_review)
+    generated_title = gpt.generate_title(generated_review, detected_language)
+    print("Title: ", generated_title)
+    
+    # Prepare and send email
+    body = email_body(guest_name, manager_name, guest_email, detected_language, generated_review, generated_title)
+    print("Email sent.")
+
+    # Return the following response
+    return book.json()
+
+
+
 
 
 # Office Scripts and custom functions in Excel on the web require CORS

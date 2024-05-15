@@ -1,5 +1,5 @@
 async function main(workbook: ExcelScript.Workbook) {
-  await runPython(workbook, "url", { auth: "DEVELOPMENT" });
+  await runPython(workbook, "https://8000-berkeokur-xlwingsdemo-e6gaj51q2sj.ws-eu111.gitpod.io/hello", { auth: "DEVELOPMENT" });
 }
 
 /**

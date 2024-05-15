@@ -1,5 +1,5 @@
 function hello() {
-  runPython("url", { auth: "DEVELOPMENT" });
+  runPython("https://8000-berkeokur-xlwingsdemo-e6gaj51q2sj.ws-eu111.gitpod.io/hello", { auth: "DEVELOPMENT" });
 }
 
 /**
