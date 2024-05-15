@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from mailjet import email_body
 from lang_detect import detect_language_polyglot
-import current_GPT as gpt
+import current_gpt as gpt
 
 app = FastAPI()
 

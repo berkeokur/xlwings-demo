@@ -2,6 +2,10 @@ function hello() {
   runPython("https://8000-berkeokur-xlwingsdemo-e6gaj51q2sj.ws-eu111.gitpod.io/hello", { auth: "DEVELOPMENT" });
 }
 
+function generate() {
+  runPython("https://8000-berkeokur-xlwingsdemo-e6gaj51q2sj.ws-eu111.gitpod.io/generate", { auth: "DEVELOPMENT" });
+}
+
 /**
  * xlwings for Google Apps Script
  * Copyright (C) 2014 - present, Zoomer Analytics GmbH.
